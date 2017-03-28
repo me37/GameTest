@@ -37,7 +37,7 @@ public class Player extends GameObject {
 		for(int i = 0; i< handler.objectList.size();i++){
 			GameObject tempObject = handler.objectList.get(i);
 			
-			if(tempObject.getId() == ID.BasicEnemy){
+			if(tempObject.getId() == ID.BasicEnemy || tempObject.getId() == ID.FastEnemy){
 				if(getBounds().intersects(tempObject.getBounds())){
 					HUD.HEALTH -= 2;
 				}
