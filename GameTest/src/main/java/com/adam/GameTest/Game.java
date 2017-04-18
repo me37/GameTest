@@ -21,19 +21,19 @@ public class Game extends Canvas implements Runnable {
 	
 	public Game(){
 		
+		hud = new HUD();
 		handler = new Handler();
+		spawner = new Spawn(handler, hud);
 		this.addKeyListener(new KeyInput(handler));
 		
 		new Window(WIDTH, HEIGHT, "Let's Build a game", this);
 		
-		hud = new HUD();
-		spawner = new Spawn(handler, hud);
+		
 		
 		random = new Random();
 		
 		handler.addObject(new Player(WIDTH/2-32, HEIGHT/2-32, ID.Player, handler));
-//		for(int i=0; i<5; i++)
-			handler.addObject(new BasicEnemy(random.nextInt(WIDTH), random.nextInt(HEIGHT), ID.BasicEnemy, handler));
+		handler.addObject(new BasicEnemy(random.nextInt(Game.WIDTH-50), random.nextInt(Game.HEIGHT-50), ID.BasicEnemy, handler));
 		
 		
 		

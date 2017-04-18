@@ -32,4 +32,15 @@ public class Handler {
 		objectList.remove(object);
 	}
 
+	public void clearEnemies() {
+		for(int i = 0; i < objectList.size(); i++){
+			GameObject tempObject = objectList.get(i);
+			
+			if(tempObject.getId() == ID.Player){
+				objectList.clear();
+				addObject(new Player((int)tempObject.getX(), (int)tempObject.getY(), ID.Player, this));
+			}
+		}
+	}
+
 }
