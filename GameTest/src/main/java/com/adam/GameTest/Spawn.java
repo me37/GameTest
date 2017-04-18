@@ -17,7 +17,7 @@ public class Spawn {
 	public void tick(){
 		scoreKeep++;
 		
-		if(scoreKeep >= 50){
+		if(scoreKeep >= 150){
 			scoreKeep = 0;
 			hud.setLevel(hud.getLevel()+1);
 			
