@@ -14,10 +14,12 @@ public class Menu extends MouseAdapter {
 	private Game game;
 	private Handler handler;
 	private Random random = new Random();
+	private HUD hud;
 
-	Menu(Game game, Handler handler) {
+	Menu(Game game, Handler handler, HUD hud) {
 		this.game = game;
 		this.handler = handler;
+		this.hud = hud;
 	}
 
 	public void mousePressed(MouseEvent event) {
@@ -31,6 +33,8 @@ public class Menu extends MouseAdapter {
 				handler.clearEnemies();
 				handler.addObject(new BasicEnemy(random.nextInt(Game.WIDTH - 50), random.nextInt(Game.HEIGHT - 50),
 						ID.BasicEnemy, handler));
+				hud.setScore(0);
+				hud.setLevel(0);
 			}
 
 			// Help Button
@@ -42,7 +46,7 @@ public class Menu extends MouseAdapter {
 			if (mouseOver(mx, my, 210, 350, 200, 64)) {
 				System.exit(1);
 			}
-		} else if (game.gameState == STATE.Help) {
+		} else if (game.gameState == STATE.Help || game.gameState == STATE.GameOver) {
 			if (mouseOver(mx, my, 210, 350, 200, 64)) {
 				game.gameState = STATE.Menu;
 			}
@@ -114,6 +118,26 @@ public class Menu extends MouseAdapter {
 			g.setColor(Color.WHITE);
 			g.drawRect(210, 350, 200, 64);
 			g.drawString("Back", 220, 390);
+		} else if (game.gameState == STATE.GameOver) {
+			
+			Font fnt = new Font("arial", 1, 50);
+			Font fnt2 = new Font("arial", 1, 30);
+			Font fnt3 = new Font("arial", 1, 20);
+			
+			g.setFont(fnt);
+			g.setColor(Color.WHITE);
+			g.drawString("Game Over", 190, 50);
+			
+			g.setFont(fnt3);
+			g.drawString("You have lost, with a score of: "+hud.getScore(), 150, 200);
+			
+			
+			g.setFont(fnt2);
+			g.setColor(Color.BLACK);
+			g.fillRect(210, 350, 200, 64);
+			g.setColor(Color.WHITE);
+			g.drawRect(210, 350, 200, 64);
+			g.drawString("Try again", 245, 390);
 		}
 	}
 
