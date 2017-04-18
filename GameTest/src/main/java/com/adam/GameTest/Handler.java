@@ -1,13 +1,11 @@
 package com.adam.GameTest;
 
 import java.awt.Graphics;
-import java.util.LinkedList;
-
-import com.adam.GameTest.Game.STATE;
+import java.util.ArrayList;
 
 public class Handler {
 
-	LinkedList<GameObject> objectList = new LinkedList<GameObject>();
+	ArrayList<GameObject> objectList = new ArrayList<GameObject>();
 	Game game;
 
 	Handler(Game game) {
