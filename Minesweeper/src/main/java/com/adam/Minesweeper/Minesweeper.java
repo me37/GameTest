@@ -20,6 +20,8 @@ public class Minesweeper extends MouseAdapter implements ActionListener  {
 	public Timer timer = new Timer(1000, this);
 	public int minutes = 0, seconds = 0;
 	public boolean firstClick = true;
+	int xDim=gridX*30+30, yDim=gridY*30 + 130;
+	boolean click = false;
 	
 	
 	
@@ -27,7 +29,7 @@ public class Minesweeper extends MouseAdapter implements ActionListener  {
 		screen = new RenderScreen();
 		jframe = new JFrame("Minesweeper");
 		jframe.setVisible(true);
-		jframe.setSize(300,400);
+		jframe.setSize(xDim,yDim);
 		jframe.setResizable(false);
 		jframe.setLocation(700,300);
 		jframe.add(screen);
@@ -103,6 +105,7 @@ public class Minesweeper extends MouseAdapter implements ActionListener  {
 			}
 			screen.repaint();
 		}
+		click = false;
 	}
 	
 	public void mousePressed(MouseEvent event) {
@@ -120,24 +123,33 @@ public class Minesweeper extends MouseAdapter implements ActionListener  {
 					}
 				}
 			}
-			if(event.getButton() == MouseEvent.BUTTON1)
+			if(event.getButton() == MouseEvent.BUTTON1){
+				
 				for(int y = 0; y<gridY; y++){
 					for(int x=0; x<gridX; x++){
 						if(mouseOver(mx, my, x*30+10, y*30+25+60, 30, 30)){
-							clickSquare(x,y);
-							
+							if(!click){
+								clickSquare(x,y);
+								click=true;
+							} else if(countFlags(x, y)==solution[x][y]){
+								uncoverSurrounding(x, y);
+							}
 						}
 					}
 				}
+				
+			}
 			if(event.getButton() == MouseEvent.BUTTON3)
 				for(int y = 0; y<gridY; y++){
 					for(int x=0; x<gridX; x++){
-						if(mouseOver(mx, my, x*30+10, y*30+25+60, 30, 30))
-							flagSquare(x,y);
+						if(mouseOver(mx, my, x*30+10, y*30+25+60, 30, 30)){
+							if(!uncovered[x][y])
+								flagSquare(x,y);
+						}
 					}
 				}
 		}
-		if(event.getButton() == MouseEvent.BUTTON1 && mouseOver(mx,my,130, 35, 30, 30)){
+		if(event.getButton() == MouseEvent.BUTTON1 && mouseOver(mx,my,xDim/2-20, 35, 30, 30)){
 			restart();
 		}
 		screen.repaint();
@@ -164,6 +176,8 @@ public class Minesweeper extends MouseAdapter implements ActionListener  {
 				flags[x][y] = true;
 				numberOfFlags++;
 			}
+		} else {
+			System.out.println(countFlags(x, y));
 		}
 		
 	}
@@ -180,30 +194,7 @@ public class Minesweeper extends MouseAdapter implements ActionListener  {
 			uncovered[x][y] = true;
 			numberUncovered++;
 			if(solution[x][y]==0){
-				if(x-1 >= 0 && y-1 >= 0 && !uncovered[x-1][y-1]){
-					clickSquare(x-1,y-1);
-				}
-				if(x-1 >= 0 && !uncovered[x-1][y]){
-					clickSquare(x-1,y);
-				}
-				if(x-1 >= 0 && y+1 < gridY && !uncovered[x-1][y+1]){
-					clickSquare(x-1, y+1);
-				}
-				if(y+1 < gridY && !uncovered[x][y+1]){
-					clickSquare(x, y+1);
-				}
-				if(x+1 < gridX && y+1 < gridY && !uncovered[x+1][y+1]){
-					clickSquare(x+1,y+1);
-				}
-				if(x+1 < gridX && !uncovered[x+1][y]){
-					clickSquare(x+1, y);
-				}
-				if(x+1 < gridX && y-1 >= 0 && !uncovered[x+1][y-1]){
-					clickSquare(x+1, y-1);
-				}
-				if(y-1 >= 0 && !uncovered[x][y-1]){
-					clickSquare(x,y-1);
-				}
+				uncoverSurrounding(x, y);
 			} else if(solution[x][y] == -1){
 				for(int y1 = 0; y1<gridY; y1++){
 					for(int x1=0; x1<gridX; x1++){
@@ -216,6 +207,33 @@ public class Minesweeper extends MouseAdapter implements ActionListener  {
 		}
 		if(numberUncovered == (gridX*gridY-numberOfMines)){
 			gameState = STATE.Win;
+		}
+	}
+	
+	private void uncoverSurrounding(int x, int y){
+		if(x-1 >= 0 && y-1 >= 0 && !uncovered[x-1][y-1]){
+			clickSquare(x-1,y-1);
+		}
+		if(x-1 >= 0 && !uncovered[x-1][y]){
+			clickSquare(x-1,y);
+		}
+		if(x-1 >= 0 && y+1 < gridY && !uncovered[x-1][y+1]){
+			clickSquare(x-1, y+1);
+		}
+		if(y+1 < gridY && !uncovered[x][y+1]){
+			clickSquare(x, y+1);
+		}
+		if(x+1 < gridX && y+1 < gridY && !uncovered[x+1][y+1]){
+			clickSquare(x+1,y+1);
+		}
+		if(x+1 < gridX && !uncovered[x+1][y]){
+			clickSquare(x+1, y);
+		}
+		if(x+1 < gridX && y-1 >= 0 && !uncovered[x+1][y-1]){
+			clickSquare(x+1, y-1);
+		}
+		if(y-1 >= 0 && !uncovered[x][y-1]){
+			clickSquare(x,y-1);
 		}
 	}
 	
@@ -279,6 +297,44 @@ public class Minesweeper extends MouseAdapter implements ActionListener  {
 		}
 		
 		return available;
+	}
+	
+	private int countFlags(int x, int y){
+		int flags = 0;
+		
+		if(x-1 >= 0 && y-1 >= 0){
+			if(this.flags[x-1][y-1])
+				flags++;
+		}
+		if(x-1 >= 0){
+			if(this.flags[x-1][y])
+				flags++;
+		}
+		if(x-1 >= 0 && y+1 < gridY){
+			if(this.flags[x-1][y+1])
+				flags++;
+		}
+		if(y+1 < gridY){
+			if(this.flags[x][y+1])
+				flags++;
+		}
+		if(x+1 < gridX && y+1 < gridY){
+			if(this.flags[x+1][y+1])
+				flags++;
+		}
+		if(x+1 < gridX){
+			if(this.flags[x+1][y])
+				flags++;
+		}
+		if(x+1 < gridX && y-1 >= 0){
+			if(this.flags[x+1][y-1])
+				flags++;
+		}
+		if(y-1 >= 0){
+			if(this.flags[x][y-1])
+				flags++;
+		}
+		return flags;
 	}
 	
 	private void createSolutionArray(){
