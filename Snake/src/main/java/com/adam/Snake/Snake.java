@@ -146,13 +146,13 @@ public class Snake implements ActionListener, KeyListener {
 		int keyPress = e.getKeyCode();
 		
 		if(!paused){
-			if((keyPress == KeyEvent.VK_LEFT || keyPress == KeyEvent.VK_A) && direction != RIGHT)
+			if((keyPress == KeyEvent.VK_LEFT || keyPress == KeyEvent.VK_A) && snakeParts.get(snakeParts.size()-1).x!=head.x-1)
 				direction = LEFT;
-			if((keyPress == KeyEvent.VK_RIGHT || keyPress == KeyEvent.VK_D) && direction !=LEFT)
+			if((keyPress == KeyEvent.VK_RIGHT || keyPress == KeyEvent.VK_D) && snakeParts.get(snakeParts.size()-1).x!=head.x+1)
 				direction = RIGHT;
-			if((keyPress == KeyEvent.VK_UP || keyPress == KeyEvent.VK_W) && direction !=DOWN)
+			if((keyPress == KeyEvent.VK_UP || keyPress == KeyEvent.VK_W) && snakeParts.get(snakeParts.size()-1).y!=head.y-1)
 				direction = UP;
-			if((keyPress == KeyEvent.VK_DOWN || keyPress == KeyEvent.VK_S) && direction!=UP)
+			if((keyPress == KeyEvent.VK_DOWN || keyPress == KeyEvent.VK_S) && snakeParts.get(snakeParts.size()-1).y!=head.y+1)
 				direction = DOWN;
 			if(keyPress == KeyEvent.VK_PERIOD){
 				timer.setDelay(timer.getDelay()-1);

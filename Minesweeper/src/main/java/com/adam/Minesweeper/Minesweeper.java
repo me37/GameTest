@@ -15,7 +15,7 @@ public class Minesweeper extends MouseAdapter implements ActionListener  {
 	public static Minesweeper minesweeper;
 	private RenderScreen screen;
 	private Random random = new Random();
-	private int gridX = 9, gridY = 9, numberOfMines = 10;
+	private int gridX = 30, gridY = 16, numberOfMines = 99;
 	public STATE gameState = STATE.Game;
 	public Timer timer = new Timer(1000, this);
 	public int minutes = 0, seconds = 0;
@@ -205,7 +205,7 @@ public class Minesweeper extends MouseAdapter implements ActionListener  {
 				gameState = STATE.Loss;
 			}
 		}
-		if(numberUncovered == (gridX*gridY-numberOfMines)){
+		if(numberUncovered == (gridX*gridY-numberOfMines) && gameState!=STATE.Loss){
 			gameState = STATE.Win;
 		}
 	}
